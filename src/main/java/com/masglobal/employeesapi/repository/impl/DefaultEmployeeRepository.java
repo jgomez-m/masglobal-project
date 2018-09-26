@@ -4,6 +4,8 @@ import com.masglobal.employeesapi.model.EmployeeDTO;
 import com.masglobal.employeesapi.model.EmployeeResponse;
 import com.masglobal.employeesapi.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,24 +20,11 @@ public class DefaultEmployeeRepository implements EmployeeRepository {
 
     @Override
     public List<EmployeeResponse> findAll() {
-        //EmployeeDTO[] response = restTemplate.getForObject(
-        //"http://masglobaltestapi.azurewbsites.net/api/employees", EmployeeDTO[].class);
-        EmployeeResponse emp1 = new EmployeeResponse();
-        emp1.setId(1);
-        emp1.setName("Juan");
-        emp1.setContractTypeName("HourlySalaryEmployee");
-        emp1.setRoleId(1);
-        emp1.setRoleName("Admin");
-        emp1.setHourlySalary(60000D);
-        emp1.setMonthlySalary(80000D);
-        EmployeeResponse emp2 = new EmployeeResponse();
-        emp2.setId(2);
-        emp2.setName("Sebastian");
-        emp2.setContractTypeName("MonthlySalaryEmployee");
-        emp2.setRoleId(2);
-        emp2.setRoleName("Contractor");
-        emp2.setHourlySalary(60000D);
-        emp2.setMonthlySalary(80000D);
-        return Arrays.asList(emp1, emp2);
+        MappingJackson2HttpMessageConverter mapper = new MappingJackson2HttpMessageConverter();
+        mapper.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM));
+        restTemplate.setMessageConverters(Arrays.asList(mapper));
+        EmployeeResponse[] response = restTemplate.getForObject(
+        "http://masglobaltestapi.azurewebsites.net/api/employees", EmployeeResponse[].class);
+        return Arrays.asList(response);
     }
 }
