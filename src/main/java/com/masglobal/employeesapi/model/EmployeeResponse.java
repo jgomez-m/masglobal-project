@@ -21,8 +21,6 @@ public class EmployeeResponse {
 
     private Double monthlySalary;
 
-    private Double annualSalary;
-
     public Integer getId() {
         return id;
     }
